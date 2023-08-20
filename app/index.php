@@ -14,7 +14,13 @@ $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
 
 $router = new Router();
 
-$router->map('POST', 'auth/sign-in', 'App\controllers\AuthController::signIn');
+//main page
+$router->map('GET', '/', function () {
+    return new JsonResponse(['message' => 'This is main page']);
+});
+
+//get access token
+$router->map('POST', '/auth/sign-in', 'App\controllers\AuthController::signIn');
 
 $router->group('/api', function (RouteGroup $routeGroup) {
 
