@@ -1,0 +1,52 @@
+
+version: "3.7"
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - 127.0.0.1:80:80
+
+    volumes:
+      - ./app:/var/www/html
+      - ./configs/nginx:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: php
+    environment:
+      PHP_IDE_CONFIG: "serverName=PhpServerBase"
+    volumes:
+      - ./app:/var/www/html
+      - ./php_ini/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - memcached
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test_api
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test
+    volumes:
+      - ./databases/mysql:/var/lib/mysql
+
+  memcached:
+    image: memcached:latest
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    links:
+      - mysql
+    ports:
+    - 8081:80
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
