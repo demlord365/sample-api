@@ -37,9 +37,6 @@ class ProductController extends AbstractController
 
         }
 
-//        if (!$this->productService->isProductExist($itemId)) {
-//            return $this->jsonResponse(['error' => 'Product not found'], 404);
-//        }
 
         $this->productService->buyProduct($userId, $itemId);
 
